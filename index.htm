@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>TweetBoard</title>
+  <style type="text/css" media="screen">
+    body
+    {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI Web Light', 'Segoe UI Light', 'Segoe UI Web Regular', 'Segoe UI', 'Helvetica Neue', Arial;
+    }
+    .clearfix:after {
+      content: ".";
+      display: block;
+      height: 0;
+      clear: both;
+      visibility: hidden;
+    }
+    .leftcol
+    {
+      float: left;
+    }
+    .rightcol 
+    {
+      float: right;
+    }
+    .tbtitle  
+    {
+      margin-left: 120px;
+      padding: 20px 0 15px 40px;
+      width: 600px;
+      background-color:#f89a1e;
+      font-size: 52px;
+      color: #fff;
+    }
+    .tblatest 
+    {
+      margin: 45px 0 0 120px;
+      padding: 20px;
+      width: 450px;
+      height: 150px;
+      background-color: #1EBAED;
+      color: #fff;
+    }    
+    .tblatest td
+    {
+      vertical-align: top;
+      padding-right: 19px;
+    }
+    .tblatest td.avatarpic { padding-top: 7px; }
+    .tblatest td.tweetbody { height: 125px; }
+    .tblatest span.screenname 
+    {
+      font-size: 1.17em;
+      margin: 0 0 19px 0;
+      display: block;
+    }
+    .tblatest td.timeago
+    {
+      font-size: 0.8em;
+    }
+    .tbmessage
+    {
+      margin-right: 120px;
+      width: 320px;      
+      color: #f89a1e;
+      font-size: 48px;
+    }
+    .tbmatrix
+    {
+      clear: both;
+      width: 100%;
+      margin: 70px 105px 20px 120px;
+    }
+    .tweetcard 
+    {
+      float: left;
+      width: 340px;
+      height: 175px;
+      background-color: #1EBAED;
+      margin: 0 10px 10px 0;
+      padding: 10px;
+      color: #fff;
+    }
+    .blankcard 
+    {
+      background-color: #78D6F5;
+    }
+    .tweetcard .screenname { font-size: 1.1em; margin: 0 0 19px 0; display: inline-block; }
+    .tweetcard p { font-size: 1em; height: 75px; }
+    .tweetcard .time { font-size: .6em; }
+    .tweet 
+    {
+      display: none;
+    }
+  </style>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
+  <script src="jquery.tweet.js" charset="utf-8" type="text/javascript"></script>
+  <script src="jquery.flippy.min.js" charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+  <div class="topfold clearfix">
+    <div class="leftcol">
+      <div class="tbtitle">
+        Live Tweets
+      </div>
+      <div class="tblatest">
+        <table>
+          <tr>
+            <td class="avatarpic"></td>
+            <td class="tweetbody"></td>
+          </tr>
+          <tr>
+            <td class="timeago" colspan="2"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="rightcol tbmessage">
+      Welcome NRF Send us your tweets #MSNRF2013
+    </div> 
+  </div>
+  <div class="tbmatrix clearfix"></div>
+  <div class="tweet"></div>
+  <script type="text/javascript">
+    var latestTweetId = "",
+        matrix = null,
+        matrixSize = 12,
+        minBlank = 3;
+
+    function initializeMatrix() {
+      $('.tbmatrix').empty();
+
+      matrix = [];
+      
+      for (var i = 0; i < matrixSize; i++) {
+        addToMatrix('_blank');
+      }
+    }
+
+    function animateOut(spot) {
+      $('.tbmatrix').children().eq(spot).children().fadeOut(500, function () {
+        $('.tbmatrix').children().eq(spot).empty();
+        $('.tbmatrix').children().eq(spot).flippy({ color_target: '#78D6F5' });
+        $('.tbmatrix').children().eq(spot).addClass('blankcard');
+        matrix[spot] = '_blank';
+      });
+      console.log('Clear card at: ' + spot);
+    }
+
+    function addToMatrix(tweet) {
+      if (tweet === '_blank') {
+        if (matrix.length < matrixSize) {
+          matrix.push(tweet);
+          $('.tbmatrix').append('<div class="tweetcard blankcard"></div>');
+        }
+      }
+      else {
+        if (matrix && matrix.length == matrixSize) {
+          var spot = Math.floor((Math.random() * 12) + 0);
+
+          while (matrix[spot] != '_blank') {
+            spot = Math.floor((Math.random() * 12) + 0);
+          }
+
+          matrix[spot] = tweet.tweet_id;
+          $('.tbmatrix').children().eq(spot).replaceWith(tweet.tweetcard);
+          console.log('Add new card to matrix at: ' + spot);
+        }
+      }
+    }
+
+    function setLatestTweet(tweet) {
+      if (tweet && latestTweetId != tweet.tweet_id) {
+        latestTweetId = tweet.tweet_id;
+
+        // image
+        $('.avatarpic').fadeOut(500, function () {
+          $('.avatarpic').empty();
+          $('.avatarpic').append(tweet.avatar);
+          $('.avatarpic').fadeIn(500);
+        });
+        // body
+        $('.tweetbody').fadeOut(500, function () {
+          $('.tweetbody').empty();
+          $('.tweetbody').append(tweet.tweetbody);
+          $('.tweetbody').fadeIn(500);
+        });
+        // timeago
+        $('.timeago').fadeOut(500, function () {
+          $('.timeago').empty();
+          $('.timeago').append(tweet.timeago);
+          $('.timeago').fadeIn(500);
+        });
+      }
+    }
+
+    initializeMatrix();
+
+    jQuery(function ($) {
+      $(".tweet").tweet({
+        avatar_size: 48,
+        count: 10,
+        refresh_interval: 10,
+        query: "#my2k",
+        loading_text: "loading tweets..."
+      })
+      .bind({
+        "loaded": function (e, tweets) {
+          if (tweets.length > 0) setLatestTweet(tweets[0]);
+
+          // remove old items off matrix
+          for (var i = 0; i < matrix.length; i++) {
+            var twid = matrix[i], keeper = false;
+
+            for (var j = 1; j < tweets.length; j++) {
+              if (twid === tweets[j].tweet_id) {
+                keeper = true;
+                break;
+              }
+            }
+
+            if (keeper) {
+              // leave item on matrix
+              continue;
+            }
+            else {
+              // animate item out
+              animateOut(i);
+            }
+          }
+          // add new items to matrix
+          for (var k = 1; k < tweets.length; k++) {
+            var twid = tweets[k].tweet_id, added = false, newMatrixItems = 0;
+
+            for (var l = 0; l < matrix.length; l++) {
+              if (twid === matrix[l]) {
+                added = true;
+                break;
+              }
+            }
+
+            if (added) {
+              // item on matrix
+              continue;
+            }
+            else {
+              // add item to matrix
+              if (newMatrixItems < (matrixSize - minBlank)) {
+                addToMatrix(tweets[k]);
+                newMatrixItems++;
+              }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
