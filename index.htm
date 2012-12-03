@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8" />
@@ -83,17 +83,19 @@
       padding: 10px;
       color: #fff;
     }
+    @-webkit-keyframes spin {
+      0%{
+          transform: rotateY(0deg);
+      }
+      100%{
+          transform:  rotateY(360deg);
+      }
+    }    
     .blankcard 
     {
       background-color: #78D6F5;
-      perspective: 1000;
-      transform-style: preserve-3d;
-      transition: all 1.0s linear;
-      transform: rotateY(180deg);
-    }
-    .blankcard:hover 
-    {
-      
+      -webkit-animation: spin 5s linear 1 normal;
+      display:inline-block;
     }
     .tweetcard .screenname { font-size: 1.1em; margin: 0 0 19px 0; display: inline-block; }
     .tweetcard p { font-size: 1em; height: 75px; }
@@ -171,11 +173,16 @@
     }
     
     function animateOut(spot) {
-      $('.tbmatrix').children().eq(spot).children().fadeOut(900, function () {
+      /*$('.tbmatrix').children().eq(spot).children().fadeOut(900, function () {
         $('.tbmatrix').children().eq(spot).empty();
         $('.tbmatrix').children().eq(spot).addClass('blankcard');
         matrix[spot] = '_blank';
-      });
+      });*/
+      
+      $('.tbmatrix').children().eq(spot).addClass('blankcard');
+      $('.tbmatrix').children().eq(spot).empty();
+      matrix[spot] = '_blank';
+      
       console.log('Clear card at: ' + spot);
     }
 
