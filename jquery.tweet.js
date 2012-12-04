@@ -204,21 +204,20 @@
       o.avatar_profile_url = o.twitter_base + o.avatar_screen_name;
 
       // Default spans, and pre-formatted blocks for common layouts
-      o.listItemStart = t('<li data-tweet-id="{tweet_id}">', o);
       o.user = t('<a class="tweet_user" href="{user_url}">{screen_name}</a>', o);
       o.join = s.join_text ? t('<span class="tweet_join">{join_text}</span>', o) : '';
-      o.avatar = o.avatar_size ?
-        t('<img src="{avatar_url}" height="{avatar_size}" width="{avatar_size}" alt="{avatar_screen_name}\'s avatar" title="{avatar_screen_name}\'s avatar" border="0"/>', o) : '';
+      o.avatar = o.avatar_size ? t('<img class="avatarpic" src="{avatar_url}" height="{avatar_size}" width="{avatar_size}" alt="{avatar_screen_name}\'s avatar" title="{avatar_screen_name}\'s avatar" border="0"/>', o) : '';
+      o.tweetbody = t('<div class="tweetbody"><span class="screenname">{screen_name}</span><p>{tweet_raw_text}</p></div>', o);
+      o.timeago = t('<span class="clearfix timeago">{tweet_relative_time}</span>', o);
+      o.latest = o.avatar + o.tweetbody + o.timeago;
       o.time = t('<span class="tweet_time"><a href="{tweet_url}" title="view tweet on twitter">{tweet_relative_time}</a></span>', o);
-      o.timeago = t('<span>{tweet_relative_time}</span>', o);
       o.text = t('<span class="tweet_text">{tweet_text_fancy}</span>', o);
-      o.tweetbody = t('<span class="screenname">{screen_name}</span><p>{tweet_raw_text}</p>', o);
-      o.tweetcard = t('<div class="tweetcard animatein"><span class="screenname">{screen_name}</span><p>{tweet_raw_text}</p><span class="time">{tweet_relative_time}</span></div>', o);
+      o.tweetcard = t('<div class="tweetcard facedown"><span class="screenname hide">{screen_name}</span><p class="hide">{tweet_raw_text}</p><span class="time hide">{tweet_relative_time}</span></div>', o);
       o.retweeted_text = t('<span class="tweet_text">{retweeted_tweet_text}</span>', o);
       o.reply_action = t('<a class="tweet_action tweet_reply" href="{reply_url}">reply</a>', o);
       o.retweet_action = t('<a class="tweet_action tweet_retweet" href="{retweet_url}">retweet</a>', o);
       o.favorite_action = t('<a class="tweet_action tweet_favorite" href="{favorite_url}">favorite</a>', o);
-      o.listItemEnd = '</li>';
+
       return o;
     }
 
