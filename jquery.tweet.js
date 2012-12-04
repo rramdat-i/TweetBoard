@@ -213,7 +213,7 @@
       o.timeago = t('<span>{tweet_relative_time}</span>', o);
       o.text = t('<span class="tweet_text">{tweet_text_fancy}</span>', o);
       o.tweetbody = t('<span class="screenname">{screen_name}</span><p>{tweet_raw_text}</p>', o);
-      o.tweetcard = t('<div class="tweetcard"><span class="screenname">{screen_name}</span><p>{tweet_raw_text}</p><span class="time">{tweet_relative_time}</span></div>', o);
+      o.tweetcard = t('<div class="tweetcard animatein"><span class="screenname">{screen_name}</span><p>{tweet_raw_text}</p><span class="time">{tweet_relative_time}</span></div>', o);
       o.retweeted_text = t('<span class="tweet_text">{retweeted_tweet_text}</span>', o);
       o.reply_action = t('<a class="tweet_action tweet_reply" href="{reply_url}">reply</a>', o);
       o.retweet_action = t('<a class="tweet_action tweet_retweet" href="{retweet_url}">retweet</a>', o);
